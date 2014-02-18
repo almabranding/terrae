@@ -2,26 +2,26 @@
 <div id="wrapper"><div id="container" class="splash-head">
         <label id="navCheckLabel" onclick="" for="navCheck"></label>
         <input id="navCheck" type="checkbox">
-        <div id="splash-login"><?= (!Session::get('loggedIn'))?'<label onclick="" for="menuCheck">LOGIN</label>':'<a href="'.URL.'user/profile">Welcome '.Session::get('username').'</a> | <a href="'.URL.'user/logout">Logout</a>'?>
+        <div id="splash-login"><?= (!Session::get('loggedIn'))?'<label onclick="" for="menuCheck" class="uppercase">'.$this->lang['login'].'</label>':'<a href="'.URL.'user/profile">Welcome '.Session::get('username').'</a> | <a href="'.URL.'user/logout">Logout</a>'?>
             <input id="menuCheck" type="checkbox">
             <div id="splash-login-container">
                 <div id="splash-login-box">
                     <div id="splash-login-pic"></div>
                     <div class="splash-login-left">
-                        <h2>NEW USER ?</h2>
-                        <a class="ford-arrow" href="/user/signup">Create Account</a>
-                        <h2 style="margin-top: 90px;">FORGOT YOUR PASSWORD?</h2>
-                        <a href="/user/remember" class="ford-arrow">Send email</a>
+                        <h2 class="uppercase"><?=$this->lang['new user']?> ?</h2>
+                        <a class="ford-arrow" href="/user/signup"><?=$this->lang['Create Account']?></a>
+                        <h2 style="margin-top: 90px;"><?=$this->lang['FORGOT YOUR PASSWORD']?> ?</h2>
+                        <a href="/user/remember" class="ford-arrow"><?=$this->lang['Send email']?></a>
                     </div>
                     <div class="splash-login-line"></div>
                     <div class="splash-login-right">
-                        <h1>SIGN IN</h1>
+                        <h1 class="uppercase"><?=$this->lang['sign in']?></h1>
                         <?= $this->loginForm->render('views/templates/login-template.php') ?>
                     </div>
                 </div>
             </div>
         </div>
-
+ 
         <div id="splash-logo">
             <a href="/experience/home/<?=Session::get('destination')?>"><img src="<?= URL ?>public/img/logo.png"></a>
             <div id="logoDestination"><?=$this->destination?></div>

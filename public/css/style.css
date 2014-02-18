@@ -405,6 +405,9 @@ input[type="submit"]:hover{
     vertical-align: middle;
     display: inline-block;
 }
+.back{
+    cursor: pointer;
+}
 .directSupport-more{
     background: url("../img/directSupport.png") no-repeat scroll -13px center rgba(0, 0, 0, 0);
     height: 19px;
@@ -446,6 +449,7 @@ input[type="submit"]:hover{
     color:#838587;
 }
 #footer h1{
+    text-transform: uppercase;
     color:#004066;
     font-size: 36px;
     font-family: 'League-Gothic';
@@ -461,6 +465,7 @@ input[type="submit"]:hover{
 #footer .footer-list-a li{
     display: block;
     margin: 0;
+    text-transform: capitalize;
 }
 #footer .footer-list li.footerlogo{
     vertical-align: bottom;
@@ -717,6 +722,7 @@ label[for="menuCheck"],label[for="navCheck"],label[for="supportCheck"]{
     background: url('../img/go-arrow.png') no-repeat left center transparent;
     padding-left: 10px;
     padding-top: 2px;
+    text-transform: uppercase;
 }
 .splash-leyend-go:hover{
     opacity: 0.7;
@@ -847,6 +853,7 @@ label[for="menuCheck"],label[for="navCheck"],label[for="supportCheck"]{
    color:#004066;
 }
 #signup-box h1{
+    text-transform: uppercase;
     font-size: 48px;
     font-weight: normal;
     font-family: 'League-Gothic';
@@ -854,12 +861,14 @@ label[for="menuCheck"],label[for="navCheck"],label[for="supportCheck"]{
     line-height: 38px;
 }
 #signup-box h2{
+    text-transform: uppercase;
     color:#004066;
     font-size: 24px;
     font-weight: normal;
     font-family: 'Gotham';
 }
 #signup-box h3{
+    text-transform: uppercase;
     color: #ffffff;
     font-size: 14px;
     font-weight: normal;
@@ -895,6 +904,9 @@ label[for="menuCheck"],label[for="navCheck"],label[for="supportCheck"]{
 }
 #signup-box ul{
     text-align: left
+}
+#signup-box ul.title{
+    text-transform: uppercase;
 }
 #signup-box ul li{
     margin: 7px;
@@ -1485,7 +1497,7 @@ form#search .last{
     font-size: 15px;
 }
 #results-list-options .results-list-title{
-    text-transform: uppercase;
+    text-transform: capitalize;
     background: #004066;
     text-align: center;
     padding: 0;
@@ -1908,6 +1920,9 @@ form#search .last{
     margin: auto;
     font-size: 14px;
 }
+#signup-box ul#booking-detail-user .label{
+    text-transform: capitalize;
+}
 #booking-detail-user li{
     display: inline-block;
     text-align: left;
@@ -1940,6 +1955,7 @@ form#search .last{
     padding-right: 50px;
     padding-top: 5px;
     text-align: right;
+    text-transform: uppercase;
 }
 #signup-box ul#booking-detail-amount .concept{
     width:29%;
@@ -1995,6 +2011,7 @@ form#search .last{
     display: inline-block;
     height: 33px;
     vertical-align: middle;
+    text-transform: uppercase;
 }
 .booking-more-feel#experiences{
     background-position: 0px 0px;

@@ -117,11 +117,7 @@ untibus alit et la sum et alit de voluptatur?',
     'options'    =>  'options',
     'maxplace'    =>  'maxplace',
     'price'    =>  'price',
-    'create'    =>  'create',
-    'create'    =>  'create',
-    'create'    =>  'create',
-    'create'    =>  'create',
-    'create'    =>  'create',
-    'create'    =>  'create',
+    
+    
 );
 ?>

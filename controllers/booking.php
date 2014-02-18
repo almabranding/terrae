@@ -53,9 +53,9 @@ class Booking extends Controller {
     }
 
     function noresults() {
-        $this->view->message['title'] = 'No results found';
+        $this->view->message['title'] = $this->view->lang['No results found'];
         $this->view->message['subtitle'] = '';
-        $this->view->message['content'] = 'No hay reservas disponibles con estos criterios';
+        $this->view->message['content'] = $this->view->lang['no available criteria'].'<br><a class="back uppercase" onclick="window.history.back();">'.$this->view->lang['back'].'</a>';
         $this->view->render('page/message');
     }
 

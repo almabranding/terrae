@@ -1,8 +1,8 @@
 <div id="signup-box">
-    <h1>SIGN UP FORM</h1>
-    <h3>*ALL FIELDS ARE REQUIRED</h3>
+    <h1><?=$this->lang['sign up form']?></h1>
+    <h3>*<?=$this->lang['all fields are required']?></h3>
     <div class="separator"></DIV>
-    <h2>PERSONAL DETAILS</h2>
+    <h2><?=$this->lang['personal details']?></h2>
     <div class="separator"></DIV>
 </div>
 <?= $this->signupForm->render('views/templates/signup-template.php') ?>

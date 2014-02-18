@@ -68,47 +68,70 @@ class Booking_Model extends Model {
         }
 
 
-        $form->add('label', 'label_first_name', 'first_name', $this->lang['fullname'].':');
-        $form->add('text', 'first_name', $user['first_name'], array('autocomplete' => 'off', 'placeholder' => $this->lang['Fullname of the booker']));
+        $form->add('label', 'label_first_name', 'first_name', $this->lang['fullname'] . ':');
+        $obj = $form->add('text', 'first_name', $user['first_name'], array('autocomplete' => 'off', 'placeholder' => $this->lang['Fullname of the booker']));
+        $obj->set_rule(array(
+            'required' => array('error', 'Name is required!'),
+        ));
+        $form->add('label', 'label_last_name', 'last_name', $this->lang['surname'] . ':');
+        $obj = $form->add('text', 'last_name', $user['last_name'], array('autocomplete' => 'off', 'placeholder' => $this->lang['Surnames of the booker']));
+        $obj->set_rule(array(
+            'required' => array('error', $this->lang['surname'] . ' ' . $this->lang['is required'] . '!'),
+        ));
+        $form->add('label', 'label_email', 'email', $this->lang['email'] . ':');
+        $obj = $obj = $form->add('text', 'email', $user['email'], array('autocomplete' => 'off', 'placeholder' => $this->lang['Contact e-mail']));
+        $obj->set_rule(array(
+            'required' => array('error', $this->lang['email'] . ' ' . $this->lang['is required'] . '!'),
+        ));
+        $form->add('label', 'label_phone', 'phone', $this->lang['phone'] . ':');
+        $obj = $form->add('text', 'phone', $user['phone'], array('autocomplete' => 'off', 'placeholder' => $this->lang['Contact phone']));
+        $obj->set_rule(array(
+            'required' => array('error', $this->lang['phone'] . ' ' . $this->lang['is required'] . '!'),
+        ));
+        $form->add('label', 'label_city', 'city', $this->lang['city'] . ':');
+        $obj = $form->add('text', 'city', $user['city'], array('autocomplete' => 'off', 'placeholder' => $this->lang['City of the booker']));
+        $obj->set_rule(array(
+            'required' => array('error', $this->lang['city'] . ' ' . $this->lang['is required'] . '!'),
+        ));
+        $form->add('label', 'label_country', 'country', $this->lang['country'] . ':');
+        $obj = $form->add('text', 'country', $user['country'], array('autocomplete' => 'off', 'placeholder' => $this->lang['Country of the booker']));
+        $obj->set_rule(array(
+            'required' => array('error', $this->lang['country'] . ' ' . $this->lang['is required'] . '!'),
+        ));
+        $form->add('label', 'label_cardholder', 'cardholder', $this->lang['card holder'] . ':');
+        $obj = $form->add('text', 'cardholder', '', array('autocomplete' => 'off', 'placeholder' => $this->lang['Cardholder´s fullname']));
 
-        $form->add('label', 'label_last_name', 'last_name',$this->lang['surname']. ':');
-        $form->add('text', 'last_name', $user['last_name'], array('autocomplete' => 'off', 'placeholder' => $this->lang['Surnames of the booker']));
+        $obj->set_rule(array(
+            'required' => array('error', $this->lang['card holder'] . ' ' . $this->lang['is required'] . '!'),
+        ));
 
-        $form->add('label', 'label_email', 'fullname', $this->lang['email'].':');
-        $form->add('text', 'email', $user['email'], array('autocomplete' => 'off', 'placeholder' => $this->lang['Contact e-mail']));
+        $form->add('label', 'label_cardnumber', 'cardnumber', $this->lang['card number'] . ':');
+        $obj = $form->add('text', 'cardnumber', '', array('autocomplete' => 'off', 'placeholder' => $this->lang['Credit card number']));
 
-        $form->add('label', 'label_phone', 'surname', $this->lang['phone'].':');
-        $form->add('text', 'phone', $user['phone'], array('autocomplete' => 'off', 'placeholder' => $this->lang['Contact phone']));
+        $obj->set_rule(array(
+            'required' => array('error', $this->lang['card number'] . ' ' . $this->lang['is required'] . '!'),
+        ));
 
-        $form->add('label', 'label_city', 'fullname', $this->lang['city'].':');
-        $form->add('text', 'city', $user['city'], array('autocomplete' => 'off', 'placeholder' => $this->lang['City of the booker']));
+        $form->add('label', 'label_giftcode', 'giftcode', $this->lang['gift code'] . ':');
+        $form->add('text', 'giftcode', '', array('autocomplete' => 'off', 'placeholder' => $this->lang['Gift Code']));
 
-        $form->add('label', 'label_country', 'country', $this->lang['country'].':');
-        $form->add('text', 'country', $user['country'], array('autocomplete' => 'off', 'placeholder' => $this->lang['Country of the booker']));
-
-        $form->add('label', 'label_cardholder', 'cardholder', $this->lang['card holder'].':');
-        $form->add('text', 'cardholder', '', array('autocomplete' => 'off', 'placeholder' => $this->lang['Cardholder´s fullname']));
-
-        $form->add('label', 'label_cardnumber', 'cardnumber', $this->lang['card number'].':');
-        $form->add('text', 'cardnumber', '', array('autocomplete' => 'off', 'placeholder' => $this->lang['Credit card number']));
-
-        $form->add('label', 'label_giftcode', 'giftcode', $this->lang['gift code'].':');
-    $form->add('text', 'giftcode', '', array('autocomplete' => 'off', 'placeholder' => $this->lang['Gift Code']));
-
-        $form->add('label', 'label_cardtype', 'cardtype', $this->lang['card type'].':');
+        $form->add('label', 'label_cardtype', 'cardtype', $this->lang['card type'] . ':');
         $obj = $form->add('select', 'cardtype', '', array('autocomplete' => 'off', 'placeholder' => $this->lang['Please, select card type']));
         $obt['visa'] = 'Visa';
         $obt['mastercard'] = 'Master Card';
         $obj->add_options($obt, true);
         unset($obt);
 
-        $form->add('label', 'label_expire', 'expire', $this->lang['expired date'].':');
+        $form->add('label', 'label_expire', 'expire', $this->lang['expired date'] . ':');
         $obj = $form->add('select', 'month', 0, array('autocomplete' => 'off', 'placeholder' => 'Month'));
         $obt[''] = '';
         for ($i = 1; $i <= 12; $i++) {
             $obt[$i] = $i;
         }
         $obj->add_options($obt, true);
+        $obj->set_rule(array(
+            'required' => array('error', $this->lang['month'] . ' ' . $this->lang['is required'] . '!'),
+        ));
         unset($obt);
         $obj = $form->add('select', 'year', 0, array('autocomplete' => 'off', 'placeholder' => 'Year'));
         $obt[''] = '';
@@ -116,10 +139,17 @@ class Booking_Model extends Model {
             $obt[$i] = $i;
         }
         $obj->add_options($obt, true);
+        $obj->set_rule(array(
+            'required' => array('error', $this->lang['year'] . ' ' . $this->lang['is required'] . '!'),
+        ));
         unset($obt);
 
         $form->add('label', 'label_cvv', 'cvv', 'CVV:');
-        $form->add('text', 'cvv', '', array('autocomplete' => 'off', 'placeholder' => '?'));
+        $obj = $form->add('text', 'cvv', '', array('autocomplete' => 'off', 'placeholder' => '?'));
+        $obj->set_rule(array(
+            'length' => array(3, 4, 'error', ''),
+            'required' => array('error', 'CVV ' . $this->lang['is required'] . '!'),
+        ));
 
         $form->add('label', 'label_request', 'request', 'Please write your requests:');
         $obj = $form->add('textarea', 'request', '');
@@ -163,7 +193,7 @@ class Booking_Model extends Model {
                     'numRooms' => $numRooms,
                     'rooms' => $numRooms,
                     'nights' => $nights->days,
-                    'hotel_id' => (int) $_POST['hotel_id'],
+                    'hotel_id' => (int) $_POST['hotel_id'][$room],
                     'hotel_image' => HOTEL_IMAGE . $rooms['hotel_image'],
                     'room_type' => $rooms['room_type'],
                     'name' => $rooms['name'],
@@ -188,12 +218,16 @@ class Booking_Model extends Model {
         }
         return $this->params;
     }
- public function getGiftList($id=null,$lang = LANG) {
-        if($id==null)return $this->db->select("SELECT * FROM gift_group g JOIN gift_group_description gd ON gd.gift_id=g.id WHERE gd.language_id=:lang", array('lang' => $lang));
-        else return $this->db->selectOne("SELECT * FROM gift_group g JOIN gift_group_description gd ON gd.gift_id=g.id WHERE gd.gift_id=:id AND gd.language_id=:lang", array('id' => $id,'lang' => $lang));
+
+    public function getGiftList($id = null, $lang = LANG) {
+        if ($id == null)
+            return $this->db->select("SELECT * FROM gift_group g JOIN gift_group_description gd ON gd.gift_id=g.id WHERE gd.language_id=:lang", array('lang' => $lang));
+        else
+            return $this->db->selectOne("SELECT * FROM gift_group g JOIN gift_group_description gd ON gd.gift_id=g.id WHERE gd.gift_id=:id AND gd.language_id=:lang", array('id' => $id, 'lang' => $lang));
     }
+
     public function giftReservation() {
-        
+
         $giftInfo = $this->getGiftList($_POST['giftType']);
         $data = array(
             'rec_first_name' => $_POST['rec_first_name'],
@@ -213,7 +247,7 @@ class Booking_Model extends Model {
         );
         $giftId = $this->db->insert('gift_bookings', $data);
         $userData = array(
-            'customer_id' =>$this->currentCustomerID,
+            'customer_id' => $this->currentCustomerID,
             'first_name' => $_POST['first_name'],
             'last_name' => $_POST['last_name'],
             'email' => $_POST['email'],
@@ -223,7 +257,7 @@ class Booking_Model extends Model {
             'price' => $giftInfo['price'],
             'name' => strtoupper($giftInfo['name'])
         );
-        
+
         $sql = 'UPDATE ' . DB_PREFIX . 'customers
         SET
                 first_name = \'' . $userData['first_name'] . '\',
@@ -234,10 +268,10 @@ class Booking_Model extends Model {
                 city = \'' . $userData['city'] . '\'
         WHERE id = \'' . $userData['customer_id'] . '\'';
         $this->db->sqlControl($sql);
-        $this->params[] = array_merge($data,$userData);
-        if($giftId){
-             $mail = new MailHelper();
-             $mail->getGiftMail($this->params[0]);
+        $this->params[] = array_merge($data, $userData);
+        if ($giftId) {
+            $mail = new MailHelper();
+            $mail->getGiftMail($this->params[0]);
         }
         return $giftId;
     }

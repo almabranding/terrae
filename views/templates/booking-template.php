@@ -142,31 +142,22 @@ if (isset($_POST['gift'])) {
 <div class="row last"><?= $_btnsubmit ?></div>
 <script>
     $('#bookingForm').on('submit', function() {
+        $('.inputRed').removeClass('inputRed');
         var correct = false;
+        console.log(correct);
         if ($('#cardnumber').val() !== '') {
             $('#cardnumber').validateCreditCard(function(result) {
                 if (result.luhn_valid && result.luhn_valid)
                     correct = true;
-                if ($('#cardtype').val() != result.card_type.name)
-                    correct = false;
+                if (result.card_type!==null)
+                    if($('#cardtype').val() !== result.card_type.name)
+                        correct = false;
             }, {
                 accept: ['visa', 'mastercard']
             });
         }
         if (!correct)
             $('#cardnumber').addClass('inputRed');
-        $('#cardData input').each(function() {
-            if ($(this).val() === '') {
-                $(this).addClass('inputRed');
-                correct = false;
-            }
-        });
-        $('#cardData select').each(function() {
-            if ($(this).val() === '') {
-                $(this).parents('.styled-select-box').addClass('inputRed');
-                correct = false;
-            }
-        });
         return correct;
     });
 </script>

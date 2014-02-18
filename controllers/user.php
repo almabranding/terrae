@@ -100,7 +100,7 @@ class User extends Controller {
     }
 
     function booking($bookid = null) {
-        $this->view->booking = $this->model->getBooking($bookid);
+        $this->view->rooms = $this->model->getBooking($bookid);
         $this->view->user = $this->model->getUser();
         $this->view->setBreadcrumb('Booking');
         $this->view->setBreadcrumb($this->view->booking['booking_description'], true);
