@@ -15,8 +15,8 @@
 <?php echo (isset($zf_error) ? $zf_error : (isset($error) ? $error : '')) ?>
 <div id="gift-wrapper">
      <ul id="gift-types">
-<?foreach($this->variables['view']->gift as $gift){?>
-         <li style="color:<?=$gift['color']?>"><div class="box"> <input id="gift_<?=$gift['gift_id']?>" type="radio" name="giftType" value="<?=$gift['gift_id']?>"></div><label for="gift_<?=$gift['gift_id']?>" class="desc content"><span class="title uppercase"><?=$this->variables['view']->lang['card?'].' '.$gift['name']?> (<?=$gift['price']?> €)</span><br><?=$gift['content']?></label></li>
+<?foreach($this->variables['view']->gift as $key=>$gift){?>
+         <li style="color:<?=$gift['color']?>"><div class="box"> <input id="gift_<?=$gift['gift_id']?>" type="radio" <?=($key==0)?'checked':''?> name="giftType" value="<?=$gift['gift_id']?>"></div><label for="gift_<?=$gift['gift_id']?>" class="desc content"><span class="title uppercase"><?=$this->variables['view']->lang['card?'].' '.$gift['name']?> (<?=$gift['price']?> €)</span><br><?=$gift['content']?></label></li>
 <?}?>
 </ul>  
 </div>

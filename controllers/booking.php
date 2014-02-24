@@ -15,7 +15,7 @@ class Booking extends Controller {
         $this->view->setBreadcrumb('Booking');
     }
 
-    function confirmation() {
+    function confirmation($msg=null) {
         $_POST['checkin'] = Model::getTimeReverse($_POST['checkin']);
         $_POST['checkout'] = Model::getTimeReverse($_POST['checkout']);
         $this->view->bookingForm = $this->model->bookingForm();
@@ -24,6 +24,9 @@ class Booking extends Controller {
         foreach ($this->model->params as $id => $room) {
             if ($room['numRooms'] != $checkin->CheckAvailabilityForPeriod($room['room_id'], $room['checkin_date'], $room['checkout_date'], $room['numRooms']))
                 header('location: /booking/noresults');
+            if (isset($_POST['gift'])) {
+            $this->model->params[$id]['price']=0;
+        }
         }
         foreach ($this->model->params as $id => $room) {
             $this->model->AddToReservation($room['room_id'], $room);
@@ -41,21 +44,29 @@ class Booking extends Controller {
 
     function giftconfirmation() {
         $this->view->bookingForm = $this->model->bookingForm();
-        $Gift = $this->loadSingleModel('gift');
-        $giftInfo = $Gift->getGiftList($_POST['giftType']);
+        $giftInfo = $this->model->getGiftTypes($_POST['giftType']);
         $giftInfo['rec_first_name'] = $_POST['first_name'];
         $giftInfo['rec_last_name'] = $_POST['last_name'];
         $giftInfo['rec_email'] = $_POST['email'];
         $giftInfo['rec_message'] = $_POST['message'];
-        $this->view->giftInfo = $giftInfo;
+        $giftInfo['giftType'] = $_POST['giftType'];
+        $this->view->giftInfo =$this->model->giftInfo = $giftInfo;
+        $this->model->giftPrepareReservation();
         $this->view->setBreadcrumb('Confirmation', true);
         $this->view->render('page/booking');
     }
 
-    function noresults() {
+    function noresults($type=null) {
+        if($type==null){
         $this->view->message['title'] = $this->view->lang['No results found'];
         $this->view->message['subtitle'] = '';
         $this->view->message['content'] = $this->view->lang['no available criteria'].'<br><a class="back uppercase" onclick="window.history.back();">'.$this->view->lang['back'].'</a>';
+        }
+        if($type=='invalidCode'){
+        $this->view->message['title'] = $this->view->lang['Invalid Code'];
+        $this->view->message['subtitle'] = '';
+        $this->view->message['content'] = $this->view->lang['have to use a valid code'].'<br><a class="back uppercase" onclick="window.history.back();">'.$this->view->lang['back'].'</a>';
+        }
         $this->view->render('page/message');
     }
 

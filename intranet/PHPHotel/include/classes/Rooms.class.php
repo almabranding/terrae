@@ -259,10 +259,10 @@ class Rooms extends MicroGrid {
                 //'priority_order' => array('title' => _ORDER, 'type' => 'textbox', 'width' => '35px', 'required' => true, 'readonly' => false, 'maxlength' => '3', 'default' => '0', 'validation_type' => 'numeric|positive'),
                 'is_active' => array('title' => _ACTIVE, 'type' => 'checkbox', 'readonly' => false, 'default' => '1', 'true_value' => '1', 'false_value' => '0'),
             ),
-            'separator_2' => array(
+            /*'separator_2' => array(
                 'separator_info' => array('legend' => _ROOM_FACILITIES),
                 'facilities' => array('title' => _FACILITIES, 'type' => 'enum', 'width' => '', 'required' => false, 'readonly' => false, 'default' => '', 'source' => $arr_facilities, 'default_option' => '', 'unique' => false, 'javascript_event' => '', 'view_type' => 'checkboxes', 'multi_select' => true),
-            ),
+            ),*/
             'separator_3' => array(
                 'separator_info' => array('legend' => _IMAGES, 'columns' => '2'),
                 'room_icon' => array('title' => _ICON_IMAGE, 'type' => 'image', 'width' => '210px', 'required' => false, 'target' => 'images/rooms_icons/', 'no_image' => '', 'random_name' => $random_name, 'image_name_pefix' => $image_prefix . 'icon_', 'unique' => true, 'thumbnail_create' => true, 'thumbnail_field' => 'room_icon_thumb', 'thumbnail_width' => '190px', 'thumbnail_height' => '', 'file_maxsize' => '500k'),
@@ -336,10 +336,10 @@ class Rooms extends MicroGrid {
                 //'priority_order' => array('title' => _ORDER, 'type' => 'textbox', 'width' => '35px', 'required' => true, 'readonly' => false, 'maxlength' => '3', 'default' => '0', 'validation_type' => 'numeric|positive'),
                 'is_active' => array('title' => _ACTIVE, 'type' => 'checkbox', 'readonly' => false, 'default' => '1', 'true_value' => '1', 'false_value' => '0'),
             ),
-            'separator_2' => array(
+           /* 'separator_2' => array(
                 'separator_info' => array('legend' => _ROOM_FACILITIES),
                 'facilities' => array('title' => _FACILITIES, 'type' => 'enum', 'width' => '', 'required' => false, 'readonly' => false, 'default' => '', 'source' => $arr_facilities, 'default_option' => '', 'unique' => false, 'javascript_event' => '', 'view_type' => 'checkboxes', 'multi_select' => true),
-            ),
+            ),*/
             'separator_3' => array(
                 'separator_info' => array('legend' => _IMAGES, 'columns' => '2'),
                 'room_icon' => array('title' => _ICON_IMAGE, 'type' => 'image', 'width' => '210px', 'required' => false, 'target' => 'images/rooms_icons/', 'no_image' => '', 'random_name' => $random_name, 'image_name_pefix' => $image_prefix . 'icon_', 'thumbnail_create' => true, 'thumbnail_field' => 'room_icon_thumb', 'thumbnail_width' => '190px', 'thumbnail_height' => '', 'file_maxsize' => '500k'),
@@ -373,10 +373,10 @@ class Rooms extends MicroGrid {
                 'priority_order' => array('title' => _ORDER, 'type' => 'label'),
                 'is_active' => array('title' => _ACTIVE, 'type' => 'enum', 'source' => $arr_is_active),
             ),
-            'separator_2' => array(
+           /* 'separator_2' => array(
                 'separator_info' => array('legend' => _ROOM_FACILITIES),
                 'facilities' => array('title' => _FACILITIES, 'type' => 'enum', 'width' => '', 'required' => false, 'readonly' => false, 'default' => '', 'source' => $arr_facilities, 'default_option' => '', 'unique' => false, 'javascript_event' => '', 'view_type' => 'checkboxes', 'multi_select' => true),
-            ),
+            ),*/
             'separator_3' => array(
                 'separator_info' => array('legend' => _IMAGES, 'columns' => '2'),
                 'room_icon' => array('title' => _ICON_IMAGE, 'type' => 'image', 'target' => 'images/rooms_icons/', 'no_image' => 'no_image.png'),
@@ -1216,6 +1216,8 @@ class Rooms extends MicroGrid {
      */
     public function AfterInsertRecord() {
         // Block operation in demo mode
+        
+        /* OLD FUNCTION
         if (strtolower(SITE_MODE) == 'demo') {
             $this->error = _OPERATION_BLOCKED;
             return false;
@@ -1249,6 +1251,49 @@ class Rooms extends MicroGrid {
         } else {
             $sql = 'INSERT INTO ' . TABLE_ROOMS_PRICES . ' (id, room_id, date_from, date_to, mon, tue, wed, thu, fri, sat, sun, is_default)
 					VALUES (NULL, ' . $this->lastInsertId . ', \'0000-00-00\', \'0000-00-00\', \'' . $default_price . '\', \'' . $default_price . '\', \'' . $default_price . '\', \'' . $default_price . '\', \'' . $default_price . '\', \'' . $default_price . '\', \'' . $default_price . '\', 1)';
+            $result = database_void_query($sql);
+        } */
+        
+        
+        if (strtolower(SITE_MODE) == 'demo') {
+            $this->error = _OPERATION_BLOCKED;
+            return false;
+        }
+        $adults_new = isset($_POST['max_adults']) ? prepare_input($_POST['max_adults']) : '0';
+        $children_new = isset($_POST['max_children']) ? prepare_input($_POST['max_children']) : '0';
+        $default_price = isset($_POST['default_price']) ? prepare_input($_POST['default_price']) : '0';
+        $room_type = isset($_POST['room_type']) ? prepare_input($_POST['room_type']) : '';
+        $room_count = isset($_POST['room_count']) ? (int) $_POST['room_count'] : '0';
+        $room_short_description = isset($_POST['room_short_description']) ? prepare_input($_POST['room_short_description']) : '';
+        $room_long_description = isset($_POST['room_long_description']) ? prepare_input($_POST['room_long_description']) : '';
+
+        // add room prices
+        // ---------------------------------------------------------------------
+        $sql = 'SELECT * FROM ' . TABLE_ROOMS_PRICES . ' WHERE room_id = ' . $this->lastInsertId;
+        $room = database_query($sql, DATA_AND_ROWS, FIRST_ROW_ONLY);
+        if ($room[1] > 0) {
+            $sql = 'UPDATE ' . TABLE_ROOMS_PRICES . '
+					SET
+						date_from = NULL,
+						date_to   = NULL,
+						mon = \'' . $default_price . '\',
+						tue = \'' . $default_price . '\',
+						wed = \'' . $default_price . '\',
+						thu = \'' . $default_price . '\',
+						fri = \'' . $default_price . '\',
+						sat = \'' . $default_price . '\',
+						sun = \'' . $default_price . '\',
+						is_default = 1
+					WHERE room_id = ' . $this->lastInsertId;
+            $result = database_void_query($sql);
+        } else {
+            $pr=($adults_new)?$default_price:0;
+            $sql = 'INSERT INTO ' . TABLE_ROOMS_PRICES . ' (id,adults, room_id, date_from, date_to, mon, tue, wed, thu, fri, sat, sun, is_default)
+					VALUES (NULL,'.(($adults_new)?$adults_new:1).', ' . $this->lastInsertId . ', \'0000-00-00\', \'0000-00-00\', \'' . $pr . '\', \'' . $pr . '\', \'' . $pr . '\', \'' . $pr . '\', \'' . $pr . '\', \'' . $pr . '\', \'' . $pr . '\', 1)';
+            $result = database_void_query($sql);
+            $pr=($children_new)?$default_price:0;
+             $sql = 'INSERT INTO ' . TABLE_ROOMS_PRICES . ' (id,children, room_id, date_from, date_to, mon, tue, wed, thu, fri, sat, sun, is_default)
+					VALUES (NULL,'.(($children_new)?$children_new:1).', ' . $this->lastInsertId . ', \'0000-00-00\', \'0000-00-00\', \'' . $pr . '\', \'' . $pr . '\', \'' . $pr . '\', \'' . $pr . '\', \'' . $pr . '\', \'' . $pr . '\', \'' . $pr . '\', 1)';
             $result = database_void_query($sql);
         }
 

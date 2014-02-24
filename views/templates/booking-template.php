@@ -45,13 +45,13 @@ $total = 0;
 <?
 if (isset($_POST['gift'])) {
     echo '<div class="separator"></DIV>
-        <h2><span class="uppercase">'.$this->variables['view']->lang['confirm your reservation'].'</span> '.$this->variables['view']->lang['with your Gift Code'].'</h2>
+        <h2><span class="uppercase">' . $this->variables['view']->lang['confirm your reservation'] . '</span> ' . $this->variables['view']->lang['with your Gift Code'] . '</h2>
         <div class="separator"></DIV>';
     echo '<ul><li class="row">' . $label_giftcode . $giftcode . '</li></ul>';
 } else {
     ?>
     <div class="separator"></DIV>
-    <h2><span class="uppercase"><?=$this->variables['view']->lang['confirm your reservation']?></span> <?=$this->variables['view']->lang['with your Credit Card']?></h2>
+    <h2><span class="uppercase"><?= $this->variables['view']->lang['confirm your reservation'] ?></span> <?= $this->variables['view']->lang['with your Credit Card'] ?></h2>
     <div class="separator"></DIV>
 
     <ul id="cardData">
@@ -86,8 +86,8 @@ if (isset($_POST['gift'])) {
 <? } ?>
 </div>
 <div id="signup-box" class="booking-detail">
-    <h1 class="uppercase"><?=$this->variables['view']->lang['summari']?></h1>
-    <h2 class="uppercase"><?=$this->variables['view']->lang['of your reservation']?></h2>
+    <h1 class="uppercase"><?= $this->variables['view']->lang['summari'] ?></h1>
+    <h2 class="uppercase"><?= $this->variables['view']->lang['of your reservation'] ?></h2>
     <? if (!isset($_POST['giftType'])) { ?>
         <div class="img"><img class="full" src="<?= $this->variables['view']->rooms[key($this->variables['view']->rooms)]['hotel_image'] ?>"></div>
         <div class="info">
@@ -102,62 +102,65 @@ if (isset($_POST['gift'])) {
                         <input type="hidden" name="room_type[<?= $room['room_id'] ?>]" value="<?= $room['room_type'] ?>">
                         <h2 class="title"><?= $this->variables['view']->rooms[$id]['name'] . ' - ' . $room['room_type'] ?></h2>
                         <ul class="box">
-                            <li><div class="attr uppercase"><?=$this->variables['view']->lang['check in']?>:</div><div class="value"><?= $this->variables['view']->lang[date('l', strtotime($room['checkin_date']))]; ?> , <?= Model::getTime($room['checkin_date']) ?></div></li>
-                            <li><div class="attr uppercase"><?=$this->variables['view']->lang['check out']?>:</div><div class="value"><?= $this->variables['view']->lang[date('l', strtotime($room['checkout_date']))]; ?> , <?= Model::getTime($room['checkout_date']) ?></div></li>
-                            <li><div class="attr uppercase"><?=$this->variables['view']->lang['Nplaces']?>:</div><div class="value capitalize"><?= $room['max_adults'] ?> <?=$this->variables['view']->lang['adults']?>   <?= $room['max_children'] ?> <?=$this->variables['view']->lang['children']?></div></li>
+                            <li><div class="attr uppercase"><?= $this->variables['view']->lang['check in'] ?>:</div><div class="value"><?= $this->variables['view']->lang[date('l', strtotime($room['checkin_date']))]; ?> , <?= Model::getTime($room['checkin_date']) ?></div></li>
+                            <li><div class="attr uppercase"><?= $this->variables['view']->lang['check out'] ?>:</div><div class="value"><?= $this->variables['view']->lang[date('l', strtotime($room['checkout_date']))]; ?> , <?= Model::getTime($room['checkout_date']) ?></div></li>
+                            <li><div class="attr uppercase"><?= $this->variables['view']->lang['Nplaces'] ?>:</div><div class="value capitalize"><?= $room['max_adults'] ?> <?= $this->variables['view']->lang['adults'] ?>   <?= $room['max_children'] ?> <?= $this->variables['view']->lang['children'] ?></div></li>
                         </ul>
                     </li><? } ?>
             </ul>
             <? if (!isset($_POST['gift'])) { ?>
-                <div class="boxTransparent"><?=$this->variables['view']->lang['Total amount']?>:<span class="price"><?= $total ?> € </span>
-                    <div class="vat"><?=$this->variables['view']->lang['vat included']?></div>   
+                <div class="boxTransparent"><?= $this->variables['view']->lang['Total amount'] ?>:<span class="price"><?= $total ?> € </span>
+                    <div class="vat"><?= $this->variables['view']->lang['vat included'] ?></div>   
                 </div>
 
-                <div class="box"><?=$this->variables['view']->lang['best price guaranteed by Terrae']?></div>
+                <div class="box"><?= $this->variables['view']->lang['best price guaranteed by Terrae'] ?></div>
             <? } ?>
         </div>
     <? } ?>
-    <? if (isset($_POST['giftType'])) {
-        $total = $this->variables['view']->giftInfo['price']; ?>
+    <?
+    if (isset($_POST['giftType'])) {
+        $total = $this->variables['view']->giftInfo['price'];
+        ?>
         <div class="info">
             <h2 class="title uppercase"><?= ($this->variables['view']->giftInfo['name'] != '') ? $this->variables['view']->giftInfo['name'] : '' ?></h2>
             <ul class="box">
-                <li><div class="attr capitalize"><?=$this->variables['view']->lang['for']?>For:</div><div class="value"><?= $this->variables['view']->giftInfo['rec_first_name'] . ' ' . $this->variables['view']->giftInfo['rec_last_name'] ?></div></li>
-                <li><div class="attr capitalize"><?=$this->variables['view']->lang['email']?>:</div><div class="value"><?= $this->variables['view']->giftInfo['rec_email'] ?></div></li>
-                <li><div class="attr capitalize"><?=$this->variables['view']->lang['message']?>Message:</div><div class="value"><?= $this->variables['view']->giftInfo['rec_message'] ?></div></li>
+                <li><div class="attr capitalize"><?= $this->variables['view']->lang['for'] ?>:</div><div class="value"><?= $this->variables['view']->giftInfo['rec_first_name'] . ' ' . $this->variables['view']->giftInfo['rec_last_name'] ?></div></li>
+                <li><div class="attr capitalize"><?= $this->variables['view']->lang['email'] ?>:</div><div class="value"><?= $this->variables['view']->giftInfo['rec_email'] ?></div></li>
             </ul>
         </div>
-<? } ?>
+    <? } ?>
 </div>
 <? if (!isset($_POST['gift'])) { ?>
     <div class="booking-resume">
-        <div class="title"><h1><?=$this->variables['view']->lang['Your reservation']?>:</h1><h2 class="uppercase"><?=$this->variables['view']->lang['charge on card']?></h2></div><div class="price"><?= $total ?>€ <span class="vat"><?=$this->variables['view']->lang['vat included']?></span></div>
+        <div class="title"><h1><?= $this->variables['view']->lang['Your reservation'] ?>:</h1><h2 class="uppercase"><?= $this->variables['view']->lang['charge on card'] ?></h2></div><div class="price"><?= $total ?>€ <span class="vat"><?= $this->variables['view']->lang['vat included'] ?></span></div>
     </div>
 <? } ?>
 </div>
 
 <div id="contact-request">
-<?php echo $label_request . $request ?>
+    <?php echo $label_request . $request ?>
 </div>
 <div class="row last"><?= $_btnsubmit ?></div>
 <script>
     $('#bookingForm').on('submit', function() {
         $('.inputRed').removeClass('inputRed');
         var correct = false;
-        console.log(correct);
-        if ($('#cardnumber').val() !== '') {
-            $('#cardnumber').validateCreditCard(function(result) {
-                if (result.luhn_valid && result.luhn_valid)
-                    correct = true;
-                if (result.card_type!==null)
-                    if($('#cardtype').val() !== result.card_type.name)
-                        correct = false;
-            }, {
-                accept: ['visa', 'mastercard']
-            });
+        if ($('#cardnumber').length) {
+            if ($('#cardnumber').val() !== '') {
+                $('#cardnumber').validateCreditCard(function(result) {
+                    if (result.luhn_valid && result.luhn_valid)
+                        correct = true;
+                    if (result.card_type !== null)
+                        if ($('#cardtype').val() !== result.card_type.name)
+                            correct = false;
+                }, {
+                    accept: ['visa', 'mastercard']
+                });
+            }
+            if (!correct)
+                $('#cardnumber').addClass('inputRed');
+            return correct;
         }
-        if (!correct)
-            $('#cardnumber').addClass('inputRed');
-        return correct;
+        return true;
     });
 </script>

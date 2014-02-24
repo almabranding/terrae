@@ -2,6 +2,8 @@
 
 class MailHelper extends Model {
 
+    public $_from='info@terrae.com';
+    public $_admin='dan@almabranding.com';
     public function __construct() {
         parent::__construct();
         $this->loadLang();
@@ -20,6 +22,29 @@ class MailHelper extends Model {
         $this->sendMail($tpl, array($user['email']), 'Terrae: Confirmation mail');
     }
 
+    public function sendContact() {
+        $tpl = file_get_contents(ROOT . 'views/templates/info-mail.html');
+         $content.='<table>';
+         $content.='<tr><td>COMPANY CONTACT</td><td></td></tr>';
+        $content.='<tr><td>Company:</td><td>'.$_POST['company'].'</td></tr>';
+        $content.='<tr><td>Name:</td><td>'.$_POST['name'].'</td></tr>';
+        $content.='<tr><td>Email:</td><td>'.$_POST['email'].'</td></tr>';
+        $content.='<tr><td>Phone:</td><td>'.$_POST['phone'].'</td></tr>';
+        $content.='<tr><td>Country:</td><td>'.$_POST['country'].'</td></tr>';
+        $content.='<tr><td>City:</td><td>'.$_POST['city'].'</td></tr>';
+        $content.='<tr><td>Request:</td><td>'.$_POST['request'].'</td></tr>';
+        $content.='</table>';
+        $data = array(
+            'content' => $content,
+            'link' => '',
+            'name' => '',
+        );
+        foreach ($data as $key => $string) {
+            $tpl = str_replace('{{' . $key . '}}', $string, $tpl);
+        }
+        $this->sendMail($tpl, array($this->_admin), 'Terrae: Company Contact');
+    }
+    
     public function getRememberMail($user) {
         $hash = Hash::create('sha256', $user['id'], HASH_PASSWORD_KEY);
         $link = URL . 'user/resetpassword?id=' . $user[id] . '&hash=' . $hash;
@@ -31,25 +56,17 @@ class MailHelper extends Model {
         $this->sendMail($tpl, array($user['email']), 'Terrae: Reset password');
     }
 
-    public function sendMail($html, $list, $titulo, $from = 'info@terrae.com') {
-
-
-//        $mensaje = stripslashes($_POST['comment']);
-//
-//        $headers = "MIME-Version: 1.0\r\n";
-//        $headers .= "Content-Type: text/html; charset=utf-8\r\n";
-//        $headers .= "From: " . strip_tags($from) . "\r\n";
-//        $headers .= "Reply-To: " . strip_tags($from) . "\r\n";
-
+    public function sendMail($html, $list, $titulo,$Bcc=false, $from = null) {
+        $from=($from)?$from:$this->_from;
         foreach ($list as $para) {
             $text = 'Example';
             $crlf = "\n";
             $hdrs = array(
                 'From' => strip_tags($from),
-                'to' => $para,
                 'Reply-To' => strip_tags($from),
                 'Subject' => $titulo
             );
+            $hdrs['bcc']=($Bcc)?$Bcc:'';
             $mime = new Mail_mime(array('eol' => $crlf));
 
             $mime->setTXTBody($text);
@@ -73,6 +90,7 @@ class MailHelper extends Model {
                 'checkin_date' => $book['checkin_date'],
                 'checkout_date' => $book['checkout_date'],
                 'places' => $book['max_adults'] . ' Adults ' . $book['max_children'] . ' children ',
+                'request' => $book['request'],
                 'price' => $book['price'] . '  €',
             );
             $concept.= '<table bgcolor="fffefd" align="center" width="680" style="padding:20px;margin-bottom: 2px;">
@@ -91,6 +109,10 @@ class MailHelper extends Model {
                 <tr>
                     <td>Nº PLACES:</td>
                     <td>' . $data['places'] . '</td>
+                </tr>
+                <tr>
+                    <td>Request:</td>
+                    <td>' . $data['request'] . '</td>
                 </tr>
                 <tr>
                     <td>AMOUNT:</td>
@@ -115,7 +137,7 @@ class MailHelper extends Model {
             $tpl = str_replace('{{' . $key . '}}', $string, $tpl);
         }
 
-        $this->sendMail($tpl, array($user['email']), $data['subject']);
+        $this->sendMail($tpl, array($user['email']), $data['subject'],$this->_admin);
     }
 
     public function getGiftMail($attr) {
@@ -164,7 +186,7 @@ class MailHelper extends Model {
         foreach ($data as $key => $string) {
             $tpl = str_replace('{{' . $key . '}}', $string, $tpl);
         }
-        $this->sendMail($tpl, array($data['email']), $data['subject']);
+        $this->sendMail($tpl, array($data['email']), $data['subject'],$this->_admin);
         
         
         $tpl = file_get_contents(ROOT . 'views/templates/booking-mail.html');
@@ -172,7 +194,7 @@ class MailHelper extends Model {
         $concept= '<table bgcolor="fffefd" align="center" width="680" style="padding:20px;margin-bottom: 2px;">
                 <tr>
                     <td>CONCEPT:</td>
-                    <td>' . $data['name'] . '</td>
+                    <td>' . $attr['name'] . '</td>
                 </tr>
                 <tr>
                   <td>YOUR GIFT CODE:</td>
@@ -197,7 +219,7 @@ class MailHelper extends Model {
         foreach ($data as $key => $string) {
             $tpl = str_replace('{{' . $key . '}}', $string, $tpl);
         }
-        $this->sendMail($tpl, array($data['email']), $data['subject']);
+        $this->sendMail($tpl, array($data['email']), $data['subject'],false,$attr['email']);
         
         
     }

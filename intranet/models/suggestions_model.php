@@ -10,33 +10,37 @@ class Suggestions_Model extends Model {
         $action = ($type == 'add') ? URL . LANG . '/suggestions/addG' : URL . LANG . '/suggestions/editG/' . $id;
         if ($type == 'edit')
             $value = $this->getGroupInfo($id);
-        $form = new Zebra_Form('addProject', 'POST', $action);
-        if ($type != 'header') {
 
-            $form->add('label', 'label_visibility', 'visibility', 'Visibility:');
-            $obj = $form->add('select', 'visibility', '');
-            $obj->add_options(array(
-                'public' => 'Public',
-                'private' => 'Private',
-                    ), $value['visibility']);
-        }
+        $form = new Zebra_Form('addProject', 'POST', $action);
+        $form->add('label', 'label_visibility', 'visibility', 'Visibility:');
+        $obj = $form->add('select', 'visibility', $value['visibility']);
+        $obj->add_options(array(
+            'public' => 'Public',
+            'private' => 'Private',
+        ),true);
         $form->add('label', 'label_type', 'type', 'Type:');
-        $obj = $form->add('select', 'type', $header['type'], array('autocomplete' => 'off'));
+        $obj = $form->add('select', 'type', $value['type']);
         $obj->add_options(array(
             "experience" => "Experience",
             "accommodation" => "Accommodation",
-                ), true);
+        ),true);
 
         foreach ($this->_langs as $lng) {
-            if ($type == 'edit')
+            if ($type == 'edit') {
                 $value = $this->getGroupInfo($id, $lng);
+                $content = $value['content'];
+            } else {
+                $content = '<h2>SUGGESTIONS</h2>
+                <h1>TITLE</h1>
+                <p>Description</p>';
+            }
             $form->add('label', 'label_name_' . $lng, 'name_' . $lng, 'Name ' . $lng);
             $obj = $form->add('text', 'name_' . $lng, $value['name'], array('autocomplete' => 'off'));
             $obj = $form->add('label', 'label_content_' . $lng, 'content_' . $lng, 'Content ' . $lng);
             $obj->set_attributes(array(
                 'style' => 'float:none',
             ));
-            $obj = $form->add('textarea', 'content_' . $lng, $value['content'], array('autocomplete' => 'off'));
+            $obj = $form->add('textarea', 'content_' . $lng, $content, array('autocomplete' => 'off'));
             $obj->set_attributes(array(
                 'class' => 'wysiwyg',
             ));
@@ -52,28 +56,32 @@ class Suggestions_Model extends Model {
             $value = $this->getImageInfo($id);
         $form = new Zebra_Form('addProject', 'POST', $action);
 
-        $obj = $form->add('hidden', 'type', $header['type']);
-        $obj = $form->add('hidden', 'header', 0);
         $form->add('label', 'label_url', 'url', 'URL ');
         $obj = $form->add('text', 'url', $value['url'], array('autocomplete' => 'off'));
 
         $form->add('label', 'label_visibility', 'visibility', 'Visibility:');
-        $obj = $form->add('select', 'visibility', '');
+        $obj = $form->add('select', 'visibility', $value['visibility']);
         $obj->add_options(array(
             'public' => 'Public',
             'private' => 'Private',
-                ), $value['visibility']);
+        ),true);
 
         foreach ($this->_langs as $lng) {
-            if ($type == 'edit')
+            if ($type == 'edit') {
                 $value = $this->getImageInfo($id, $lng);
+                $content = $value['content'];
+            }
+            if ($content == '') {
+                $content = '<h2>TYPE</h2>
+                <h1>TITLE</h1>';
+            }
             $form->add('label', 'label_name_' . $lng, 'name_' . $lng, 'Name ' . $lng);
             $obj = $form->add('text', 'name_' . $lng, $value['name'], array('autocomplete' => 'off'));
             $obj = $form->add('label', 'label_content_' . $lng, 'content_' . $lng, 'Content ' . $lng);
             $obj->set_attributes(array(
                 'style' => 'float:none',
             ));
-            $obj = $form->add('textarea', 'content_' . $lng, $value['content'], array('autocomplete' => 'off'));
+            $obj = $form->add('textarea', 'content_' . $lng, $content, array('autocomplete' => 'off'));
             $obj->set_attributes(array(
                 'class' => 'wysiwyg',
             ));
@@ -96,11 +104,11 @@ class Suggestions_Model extends Model {
     }
 
     public function getSuggestionsByGroup($group, $lang = 'en') {
-        return $this->db->select('SELECT *,p.created_at as imgdate,s.id as sugid,p.* FROM suggestions s JOIN suggestions_description sd ON sd.suggestion_id=s.id JOIN photos p ON s.photo_id=p.id WHERE s.group=:group  AND sd.language_id=:lang  AND header=0 ORDER by position', array('group' => $group, 'lang' => $lang));
+        return $this->db->select('SELECT *,p.created_at as imgdate,s.id as sugid,p.* FROM suggestions s JOIN suggestions_description sd ON sd.suggestion_id=s.id JOIN photos p ON s.photo_id=p.id WHERE s.group=:group  AND sd.language_id=:lang  ORDER by position', array('group' => $group, 'lang' => $lang));
     }
 
     public function getImageInfo($id, $lang = 'en') {
-        return $this->db->selectOne('SELECT *,p.created_at as imgdate,p.* FROM suggestions s JOIN suggestions_description sd ON sd.suggestion_id=s.id JOIN photos p ON s.photo_id=p.id WHERE s.id=:id  AND sd.language_id=:lang  AND header=0 ORDER by position', array('id' => $id, 'lang' => $lang));
+        return $this->db->selectOne('SELECT *,p.created_at as imgdate,p.* FROM suggestions s JOIN suggestions_description sd ON sd.suggestion_id=s.id JOIN photos p ON s.photo_id=p.id WHERE s.id=:id  AND sd.language_id=:lang ORDER by position', array('id' => $id, 'lang' => $lang));
     }
 
     public function toTable($lista) {
@@ -120,7 +128,7 @@ class Suggestions_Model extends Model {
             $b['values'][] = array(
                 "Section" => $value['name'],
                 "Template" => $value['type'],
-                "Options" => '<a href="' . URL . LANG . '/suggestions/view/' . $value['id'] . '"><button title="Edit" type="button" class="edit"></button></a><button type="button" title="Delete" class="delete" onclick="secureMsg(\'Do you want to delete this page?\',\'suggestions/deleteAll/' . $value['id'] . '\');"></button>'
+                "Options" => '<a href="' . URL . LANG . '/suggestions/view/' . $value['suggestions_group_id'] . '"><button title="Edit" type="button" class="edit"></button></a><button type="button" title="Delete" class="delete" onclick="secureMsg(\'Do you want to delete this page?\',\'suggestions/deleteAll/' . $value['suggestions_group_id'] . '\');"></button>'
             );
         }
         return $b;
@@ -140,6 +148,7 @@ class Suggestions_Model extends Model {
         foreach ($this->_langs as $lng) {
             $data = array(
                 'suggestion_id' => $suggestion_id,
+                'suggestions_group_id' => $group['id'],
                 'language_id' => $lng,
             );
             $this->db->insert('suggestions_description', $data);
@@ -187,7 +196,7 @@ class Suggestions_Model extends Model {
             );
             $this->db->insert('suggestions_groups_description', $data);
         }
-        return $group;
+        return $suggestion_id;
     }
 
     public function editG($id) {
@@ -222,10 +231,10 @@ class Suggestions_Model extends Model {
     }
 
     public function deleteAll($group) {
-        $sug = $this->db->select('SELECT * FROM suggestions s WHERE s.group=:group', array('group' => $group));
-        foreach ($sug as $single)
-            $this->db->delete('suggestions_description', "`suggestion_id` = {$single['id']}");
         $this->db->delete('suggestions', "`group` = {$group}");
+        $this->db->delete('suggestions_groups', "`id` = {$group}");
+        $this->db->delete('suggestions_description', "`suggestions_group_id` = {$group}");
+        $this->db->delete('suggestions_groups_description', "`suggestions_group_id` = {$group}");
 
         //$modelo = $this->getModel($id);
         //Logs::set("Ha borrado el modelo " . $id . " " . $modelo[0]['name']);
@@ -246,7 +255,7 @@ class Suggestions_Model extends Model {
             $data = array(
                 'position' => $key
             );
-            $this->db->update('suggestions', $data, "`group` = '{$value}' AND `header` = '1'");
+            $this->db->update('suggestions', $data, "`group` = '{$value}'");
         }
         exit;
     }

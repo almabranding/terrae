@@ -185,11 +185,10 @@ class Experience extends MicroGrid {
         /// REMEMBER! to add '.$sql_translation_description.' in EDIT_MODE_SQL
         /// $sql_translation_description = $this->PrepareTranslateSql(
         $sql_translation_description = $this->PrepareTranslateSql(
-                TABLE_HOTELS_DESCRIPTION, 'hotel_id', array('name', 'address', 'description')
+                TABLE_HOTELS_DESCRIPTION, 'hotel_id', array('name', 'address', 'description', 'short_description')
         );
-        $sql_translation_short_description = $this->PrepareTranslateSql(
-                TABLE_HOTELS_DESCRIPTION, 'hotel_id', array('name', 'address', 'short_description')
-        );
+
+
         ///////////////////////////////////////////////////////////////////////////////			
         //---------------------------------------------------------------------- 
         // VIEW MODE
@@ -259,7 +258,7 @@ class Experience extends MicroGrid {
                 //'stars' => array('title' => _STARS, 'type' => 'enum', 'width' => '', 'required' => true, 'readonly' => false, 'default' => '', 'source' => $arr_stars, 'default_option' => '', 'unique' => false, 'javascript_event' => '', 'view_type' => 'dropdownlist', 'multi_select' => false),
                 'time_zone' => array('title' => _TIME_ZONE, 'type' => 'enum', 'required' => true, 'width' => '480px', 'readonly' => false, 'source' => $arr_time_zones),
                 'hotel_image' => array('title' => _IMAGE, 'type' => 'image', 'width' => '210px', 'required' => true, 'readonly' => false, 'target' => 'images/hotels/', 'no_image' => 'no_image.png', 'random_name' => false, 'overwrite_image' => true, 'unique' => true, 'image_name_pefix' => 'hotel_' . (int) self::GetParameter('rid') . '_', 'thumbnail_create' => true, 'thumbnail_field' => 'hotel_image_thumb', 'thumbnail_width' => '120px', 'thumbnail_height' => '', 'file_maxsize' => '500k'),
-                'map_image' => array('title' =>'Map '._IMAGE, 'type' => 'image', 'width' => '210px', 'required' => false, 'readonly' => false, 'target' => 'images/hotels/', 'no_image' => 'no_image.png', 'random_name' => false, 'overwrite_image' => true, 'unique' => true, 'image_name_pefix' => 'map_' . (int) self::GetParameter('rid') . '_', 'thumbnail_create' => true, 'thumbnail_field' => 'map_image_thumb', 'thumbnail_width' => '120px', 'thumbnail_height' => '', 'file_maxsize' => '1500k'),
+                'map_image' => array('title' => 'Map ' . _IMAGE, 'type' => 'image', 'width' => '210px', 'required' => false, 'readonly' => false, 'target' => 'images/hotels/', 'no_image' => 'no_image.png', 'random_name' => false, 'overwrite_image' => true, 'unique' => true, 'image_name_pefix' => 'map_' . (int) self::GetParameter('rid') . '_', 'thumbnail_create' => true, 'thumbnail_field' => 'map_image_thumb', 'thumbnail_width' => '120px', 'thumbnail_height' => '', 'file_maxsize' => '1500k'),
                 //'map_code' => array('title' => _MAP_CODE, 'type' => 'textarea', 'required' => false, 'width' => '480px', 'height' => '100px', 'editor_type' => 'simple', 'readonly' => false, 'default' => '', 'validation_type' => '', 'maxlength' => '1024', 'validation_maxlength' => '1024', 'unique' => false),
                 //'priority_order' => array('title' => _ORDER, 'type' => 'textbox', 'required' => true, 'width' => '40px', 'readonly' => false, 'maxlength' => '2', 'default' => '0', 'validation_type' => 'numeric|positive', 'unique' => false, 'visible' => true),
                 //'is_default' => array('title' => _IS_DEFAULT, 'type' => 'checkbox', 'readonly' => false, 'default' => '0', 'true_value' => '1', 'false_value' => '0', 'unique' => false),
@@ -293,7 +292,6 @@ class Experience extends MicroGrid {
 								' . $this->tableName . '.stars,
 								' . $this->tableName . '.author_name,
 								' . $sql_translation_description . '
-								' . $sql_translation_short_description . '
 								' . $this->tableName . '.priority_order,
 								' . $this->tableName . '.is_active,
 								' . $this->tableName . '.is_default,
@@ -333,7 +331,7 @@ class Experience extends MicroGrid {
                 //'stars' => array('title' => _STARS, 'type' => 'enum', 'width' => '', 'required' => true, 'readonly' => false, 'default' => '', 'source' => $arr_stars, 'default_option' => '', 'unique' => false, 'javascript_event' => '', 'view_type' => 'dropdownlist', 'multi_select' => false),
                 'time_zone' => array('title' => _TIME_ZONE, 'type' => 'enum', 'required' => true, 'width' => '480px', 'readonly' => false, 'source' => $arr_time_zones),
                 'hotel_image' => array('title' => _IMAGE, 'type' => 'image', 'width' => '210px', 'required' => true, 'readonly' => false, 'target' => 'images/hotels/', 'no_image' => 'no_image.png', 'random_name' => true, 'overwrite_image' => false, 'unique' => true, 'image_name_pefix' => 'hotel_' . (int) self::GetParameter('rid') . '_', 'thumbnail_create' => true, 'thumbnail_field' => 'hotel_image_thumb', 'thumbnail_width' => '120px', 'thumbnail_height' => '', 'file_maxsize' => '500k'),
-                'map_image' => array('title' => 'Map '._IMAGE, 'type' => 'image', 'width' => '210px', 'required' => false, 'readonly' => false, 'target' => 'images/hotels/', 'no_image' => 'no_image.png', 'random_name' => true, 'overwrite_image' => false, 'unique' => true, 'image_name_pefix' => 'map_' . (int) self::GetParameter('rid') . '_', 'thumbnail_create' => true, 'thumbnail_field' => 'map_image_thumb', 'thumbnail_width' => '120px', 'thumbnail_height' => '', 'file_maxsize' => '1500k'),
+                'map_image' => array('title' => 'Map ' . _IMAGE, 'type' => 'image', 'width' => '210px', 'required' => false, 'readonly' => false, 'target' => 'images/hotels/', 'no_image' => 'no_image.png', 'random_name' => true, 'overwrite_image' => false, 'unique' => true, 'image_name_pefix' => 'map_' . (int) self::GetParameter('rid') . '_', 'thumbnail_create' => true, 'thumbnail_field' => 'map_image_thumb', 'thumbnail_width' => '120px', 'thumbnail_height' => '', 'file_maxsize' => '1500k'),
                 //'map_code' => array('title' => _MAP_CODE, 'type' => 'textarea', 'required' => false, 'width' => '480px', 'height' => '100px', 'editor_type' => 'simple', 'readonly' => false, 'default' => '', 'validation_type' => '', 'maxlength' => '1024', 'validation_maxlength' => '1024', 'unique' => false),
                 'policies' => array('title' => 'Policies', 'type' => 'textarea', 'required' => false, 'width' => '480px', 'height' => '100px', 'editor_type' => 'simple', 'readonly' => false, 'default' => '', 'validation_type' => '', 'maxlength' => '1024', 'validation_maxlength' => '1024', 'unique' => false),
                 'author_name' => array('title' => 'Author', 'type' => 'textbox', 'width' => '210px', 'required' => false, 'maxlength' => '70', 'validation_type' => 'text', 'unique' => false),
@@ -379,7 +377,7 @@ class Experience extends MicroGrid {
         $this->AddTranslateToModes(
                 $this->arrTranslations, array('name' => array('title' => _NAME, 'type' => 'textbox', 'width' => '410px', 'required' => true, 'maxlength' => '125', 'readonly' => false),
             'address' => array('title' => _ADDRESS, 'type' => 'textarea', 'width' => '410px', 'height' => '55px', 'required' => false, 'maxlength' => '225', 'validation_maxlength' => '225', 'readonly' => false),
-            'short_description' => array('title' => 'Short '._DESCRIPTION, 'type' => 'textarea', 'width' => '410px', 'height' => '90px', 'required' => false, 'maxlength' => '2048', 'validation_maxlength' => '2048', 'readonly' => false, 'editor_type' => 'wysiwyg'),
+            'short_description' => array('title' => 'Short ' . _DESCRIPTION, 'type' => 'textarea', 'width' => '410px', 'height' => '90px', 'required' => false, 'maxlength' => '2048', 'validation_maxlength' => '2048', 'readonly' => false, 'editor_type' => 'wysiwyg'),
             'description' => array('title' => _DESCRIPTION, 'type' => 'textarea', 'width' => '410px', 'height' => '90px', 'required' => false, 'maxlength' => '2048', 'validation_maxlength' => '2048', 'readonly' => false, 'editor_type' => 'wysiwyg')
                 )
         );
@@ -648,31 +646,31 @@ class Experience extends MicroGrid {
     /**
      * After-Insertion - add banner descriptions to description table
      */
-    public function AfterInsertRecord() {
-        $sql = 'INSERT INTO ' . TABLE_HOTELS_DESCRIPTION . '(id, hotel_id, language_id, name, address, description,short_description,type) VALUES ';
-        $count = 0;
-        foreach ($this->arrTranslations as $key => $val) {
-            if ($count > 0)
-                $sql .= ',';
-            $sql .= '(NULL, ' . $this->lastInsertId . ', \'' . $key . '\', \'' . encode_text(prepare_input($val['name'])) . '\', \'' . encode_text(prepare_input($val['address'])) . '\', \'' . encode_text(prepare_input($val['description'], false, 'medium')) . '\', \'1\')';
-            $count++;
-        }
-        if (database_void_query($sql)) {
-
-            // set default  = 0 for other languages
-            if (self::GetParameter('is_default', false) == '1') {
-                $sql = 'UPDATE ' . TABLE_HOTELS . '
-						SET is_active = IF(id = ' . (int) $this->lastInsertId . ', 1, is_active),
-						    is_default = IF(id = ' . (int) $this->lastInsertId . ', 1, 0)';
-                database_void_query($sql);
-            }
-
-            return true;
-        } else {
-            ///echo $sql.'<br>'.mysql_error();			
-            return false;
-        }
-    }
+   public function AfterInsertRecord()
+	{
+		$sql = 'INSERT INTO '.TABLE_HOTELS_DESCRIPTION.'(id, hotel_id, language_id, name, address, description, short_description) VALUES ';
+		$count = 0;
+		foreach($this->arrTranslations as $key => $val){
+			if($count > 0) $sql .= ',';
+			$sql .= '(NULL, '.$this->lastInsertId.', \''.$key.'\', \''.encode_text(prepare_input($val['name'])).'\', \''.encode_text(prepare_input($val['address'])).'\', \''.encode_text(prepare_input($val['description'], false, 'medium')).'\', \''.encode_text(prepare_input($val['short_description'], false, 'medium')).'\')';
+			$count++;
+		}
+		if(database_void_query($sql)){
+			
+			// set default  = 0 for other languages
+			if(self::GetParameter('is_default', false) == '1'){
+				$sql = 'UPDATE '.TABLE_HOTELS.'
+						SET is_active = IF(id = '.(int)$this->lastInsertId.', 1, is_active),
+						    is_default = IF(id = '.(int)$this->lastInsertId.', 1, 0)';
+				database_void_query($sql);					
+			}			
+			
+			return true;
+		}else{
+   		    ///echo $sql.'<br>'.mysql_error();			
+			return false;
+		}
+	}
 
     /**
      * Before-Updating operations

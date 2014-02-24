@@ -786,7 +786,7 @@ label[for="menuCheck"],label[for="navCheck"],label[for="supportCheck"]{
 .splash-login-line{
     border-right: 1px solid #FFFFFF;
     display:inline-block;
-    height: 310px;
+    height: 293px;
     width: 1px;
     float: left;
 }
@@ -2047,7 +2047,7 @@ form#search .last{
         width: 1011px;
 }
 #giftForm .message input{
-        width: 832px;
+        width: 813px;
 }
 #giftForm #label_message{
     width: auto;

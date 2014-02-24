@@ -26,7 +26,15 @@ class Booking_Model extends Model {
 
     public function __construct() {
         parent::__construct();
-        $this->currentCustomerID = (Session::get('userid') != '') ? Session::get('userid') : '';
+        if (!Session::get('userid')) {
+            $newuser = array(
+                'first_name' => '',
+                'temp' => 1,
+            );
+            Session::set('userid', $this->db->insert('book_customers', $newuser));
+        }
+
+        $this->currentCustomerID = Session::get('userid');
     }
 
     public function bookingForm() {
@@ -82,6 +90,7 @@ class Booking_Model extends Model {
         $obj = $obj = $form->add('text', 'email', $user['email'], array('autocomplete' => 'off', 'placeholder' => $this->lang['Contact e-mail']));
         $obj->set_rule(array(
             'required' => array('error', $this->lang['email'] . ' ' . $this->lang['is required'] . '!'),
+            'email' => array('error', $this->lang['email_valid']),
         ));
         $form->add('label', 'label_phone', 'phone', $this->lang['phone'] . ':');
         $obj = $form->add('text', 'phone', $user['phone'], array('autocomplete' => 'off', 'placeholder' => $this->lang['Contact phone']));
@@ -113,8 +122,10 @@ class Booking_Model extends Model {
         ));
 
         $form->add('label', 'label_giftcode', 'giftcode', $this->lang['gift code'] . ':');
-        $form->add('text', 'giftcode', '', array('autocomplete' => 'off', 'placeholder' => $this->lang['Gift Code']));
-
+        $obj = $form->add('text', 'giftcode', '', array('autocomplete' => 'off', 'placeholder' => $this->lang['Gift Code']));
+        $obj->set_rule(array(
+            'required' => array('error', $this->lang['gift code'] . ' ' . $this->lang['is required'] . '!'),
+        ));
         $form->add('label', 'label_cardtype', 'cardtype', $this->lang['card type'] . ':');
         $obj = $form->add('select', 'cardtype', '', array('autocomplete' => 'off', 'placeholder' => $this->lang['Please, select card type']));
         $obt['visa'] = 'Visa';
@@ -212,8 +223,12 @@ class Booking_Model extends Model {
                     'to_month' => $checkout['month'],
                     'to_day' => $checkout['day'],
                 );
+                if (isset($_POST['request']))
+                    $this->params[$room_id]['request'] = $_POST['request'];
                 $price = $this->getRoomPrice($room_id, $this->params[$room_id]);
                 $this->params[$room_id]['price'] = $price;
+                if (isset($_POST['gift']))
+                    $this->params[$room_id]['price'] =0;
             }
         }
         return $this->params;
@@ -221,31 +236,85 @@ class Booking_Model extends Model {
 
     public function getGiftList($id = null, $lang = LANG) {
         if ($id == null)
-            return $this->db->select("SELECT * FROM gift_group g JOIN gift_group_description gd ON gd.gift_id=g.id WHERE gd.language_id=:lang", array('lang' => $lang));
+            return $this->db->select("SELECT * FROM gift g JOIN gift_group gg ON g.`group`=gg.id JOIN gift_group_description gd ON gd.gift_id=gg.id WHERE gd.language_id=:lang", array('lang' => $lang));
+        else
+            return $this->db->selectOne("SELECT * FROM gift g JOIN gift_group gg ON g.`group`=gg.id JOIN gift_group_description gd ON gd.gift_id=gg.id WHERE g.id=:id AND gd.language_id=:lang", array('id' => $id, 'lang' => $lang));
+    }
+
+    public function getGiftTypes($id = null, $lang = LANG) {
+        if ($id == null)
+            return $this->db->select("SELECT * FROM gift_group g JOIN gift_group_description gd ON gd.gift_id=g.id WHERE gd.language_id=:lang AND g.visibility='public'", array('lang' => $lang));
         else
             return $this->db->selectOne("SELECT * FROM gift_group g JOIN gift_group_description gd ON gd.gift_id=g.id WHERE gd.gift_id=:id AND gd.language_id=:lang", array('id' => $id, 'lang' => $lang));
     }
 
-    public function giftReservation() {
-
-        $giftInfo = $this->getGiftList($_POST['giftType']);
+    public function giftPrepareReservation() {
+        $this->giftInfo['code']=$this->GenerateBookingNumber();
         $data = array(
-            'rec_first_name' => $_POST['rec_first_name'],
-            'rec_last_name' => $_POST['rec_last_name'],
-            'rec_email' => $_POST['rec_email'],
-            'rec_message' => $_POST['rec_message'],
-            'gift_group_id' => $_POST['giftType'],
-            'code' => $this->GenerateBookingNumber(),
+            'status' => 0,
+            'created_date' => $this->getTimeSQL(),
+            'rec_first_name' => $this->giftInfo['rec_first_name'],
+            'rec_last_name' => $this->giftInfo['rec_last_name'],
+            'rec_email' => $this->giftInfo['rec_email'],
+            'rec_message' => $this->giftInfo['rec_message'],
+            'gift_group_id' => $this->giftInfo['giftType'],
+            'code' => $this->giftInfo['code'],
             'customer_id' => $this->currentCustomerID,
+        );
+        $sql = 'SELECT id
+                FROM gift_bookings
+                WHERE customer_id = ' . (int) $this->currentCustomerID . ' AND
+                status = 0
+                ORDER BY id DESC';
+        $result = $this->db->select($sql);
+        if ($result[0] > 0) {
+            $id = $result[0]['id'];
+            $this->db->update('gift_bookings', $data, "`id` = '{$id}'");
+            $giftId = $id;
+        } else {
+            $giftId = $this->db->insert('gift_bookings', $data);
+        }
+        return $giftId;
+    }
+
+    public function giftReservation() {
+        $giftInfo = $this->getGiftTypes($_POST['giftType']);
+        $sql = 'SELECT *
+                FROM gift_bookings
+                WHERE customer_id = ' . (int) $this->currentCustomerID . ' AND 
+                gift_group_id = ' . (int) $_POST['giftType'] . ' AND 
+                status = 0
+                ORDER BY id DESC';
+        $result = $this->db->select($sql);
+        $res = array(
+            'rec_first_name' => $result[0]['rec_first_name'],
+            'rec_last_name' => $result[0]['rec_last_name'],
+            'rec_email' => $result[0]['rec_email'],
+            'rec_message' => $result[0]['rec_message'],
+            'gift_group_id' => $result[0]['giftType'],
+            'code' => $result[0]['code'],
+            'customer_id' => $result[0]['customer_id'],
             'cc_holder_name' => $_POST['cardholder'],
             'cc_number' => $_POST['cardnumber'],
             'cc_expires_month' => $_POST['month'],
             'cc_expires_year' => $_POST['year'],
             'cc_cvv_code' => $_POST['cvv'],
             'cc_type' => $_POST['cardtype'],
-            'gift_group_id' => $_POST['giftType'],
         );
-        $giftId = $this->db->insert('gift_bookings', $data);
+        if ($result[0] > 0) {
+            $id = $result[0]['id'];
+            $giftId = $id;
+            $data = array(
+                'status' => 1,
+                'cc_holder_name' => $_POST['cardholder'],
+                'cc_number' => $_POST['cardnumber'],
+                'cc_expires_month' => $_POST['month'],
+                'cc_expires_year' => $_POST['year'],
+                'cc_cvv_code' => $_POST['cvv'],
+                'cc_type' => $_POST['cardtype'],
+            );
+            $this->db->update('gift_bookings', $data, "`id` = '{$id}'");
+        }
         $userData = array(
             'customer_id' => $this->currentCustomerID,
             'first_name' => $_POST['first_name'],
@@ -263,12 +332,12 @@ class Booking_Model extends Model {
                 first_name = \'' . $userData['first_name'] . '\',
                 last_name = \'' . $userData['last_name'] . '\',
                 email = \'' . $userData['email'] . '\',
-                phone = \'' . $cc_params['phone'] . '\',
+                phone = \'' . $userData['phone'] . '\',
                 country = \'' . $userData['country'] . '\',
                 city = \'' . $userData['city'] . '\'
         WHERE id = \'' . $userData['customer_id'] . '\'';
         $this->db->sqlControl($sql);
-        $this->params[] = array_merge($data, $userData);
+        $this->params[] = array_merge($res, $userData);
         if ($giftId) {
             $mail = new MailHelper();
             $mail->getGiftMail($this->params[0]);
@@ -547,7 +616,7 @@ class Booking_Model extends Model {
         $cc_params = Array(
             'first_name' => $_POST['first_name'],
             'last_name' => $_POST['last_name'],
-            'email' => $_POST['month'],
+            'email' => $_POST['email'],
             'phone' => $_POST['phone'],
             'city' => $_POST['city'],
             'customer_id' => $this->currentCustomerID,
@@ -560,8 +629,20 @@ class Booking_Model extends Model {
             'cc_type' => $_POST['cardtype'],
             'request' => $_POST['request'],
         );
-        $this->PlaceBooking('', $cc_params);
+        if (isset($_POST['gift'])) {
+            $res = $this->checkGift($_POST['gift'], $_POST['giftcode']);
+            if (!$res) {
+                header('location: /booking/noresults/invalidCode');
+            } else {
+                $cc_params['gift_bookings_id'] = $res['id'];
+            }
+        }
+        $this->PlaceBooking($_POST['request'], $cc_params);
         //$this->UpdatePaymentDate();
+    }
+
+    public function checkGift($id, $code) {
+        return $this->db->selectOne('SELECT *,b.id as id FROM gift_bookings b JOIN gift g ON g.group=b.gift_group_id WHERE b.status=1 AND g.id=:id AND code=:code', array('id' => $id, 'code' => $code));
     }
 
     public function DoReservation($payment_type = '', $additional_info = '', $extras = array(), $pre_payment_type = 'full price', $pre_payment_value = '') {
@@ -862,7 +943,11 @@ class Booking_Model extends Model {
 
 
             $this->db->sqlControl($sql);
-
+            if (isset($_POST['gift'])) {
+                $sql = 'UPDATE gift_bookings SET status = 2, status_changed = \'' . $this->getTimeSQL() . '\'
+                        WHERE id = \'' . $cc_params['gift_bookings_id'] . '\'';
+                $this->db->sqlControl($sql);
+            }
             // update customer bookings/rooms amount
             $sql = 'UPDATE ' . DB_PREFIX . 'customers SET 
 						orders_count = orders_count + 1,

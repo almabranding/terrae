@@ -14,7 +14,7 @@
                     <ul id="menuNav">
                         <? if ($_SESSION[INSTALLATION_KEY]['session_account_type'] == 'owner') { ?><li><a href="<?=URL; ?>home/lista">home</a></li><? } ?>
                         <? if ($_SESSION[INSTALLATION_KEY]['session_account_type'] == 'owner') { ?><li><a href="<?=URL; ?>pages/lista">pages</a></li><? } ?>
-                        <? if ($_SESSION[INSTALLATION_KEY]['session_account_type'] == 'owner') { ?><li><a href="<?=URL; ?>gift/lista">gift</a></li><? } ?>
+                        <? if ($_SESSION[INSTALLATION_KEY]['session_account_type'] == 'owner') { ?><li><a href="<?=URL; ?>gift/bookingList">gift</a></li><? } ?>
                         <? if ($_SESSION[INSTALLATION_KEY]['session_account_type'] == 'owner') { ?><li><a href="<?=URL; ?>suggestions/lista">suggestions</a></li><? } ?>
                         <? if ($_SESSION[INSTALLATION_KEY]['session_account_type'] == 'owner') { ?><li><a href="<?=URL; ?>banner/lista">banner</a></li><? } ?>
                         <? if ($_SESSION[INSTALLATION_KEY]['session_account_type'] == 'owner') { ?><li><a href="<?=URL; ?>menu">menu</a></li><? } ?>

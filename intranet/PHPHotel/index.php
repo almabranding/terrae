@@ -34,6 +34,8 @@
 // session_cache_limiter('private, must-revalidate');    
 
 // *** set flag that this is a parent file
+@session_start();
+if(!$_SESSION['intra']['loggedIn']) header('location: /intranet');
 define('APPHP_EXEC', 'access allowed');
 require_once(dirname(__FILE__).'/../config.php');
 require_once(dirname(__FILE__).'/include/base.inc.php');

@@ -25,7 +25,7 @@
                     </ul>
                 </div>
                 <div class="description">
-<?= $this->hotel['short_description'] ?>
+                <?= $this->hotel['short_description'] ?>
                 </div>
             </div>
 
@@ -42,7 +42,7 @@
                 <div class='author' id='product-detail-text'>
                 <?= $this->hotel['description']; ?>
                 </div>
-<? if ($this->hotel['author_picture'] != '') { ?>
+            <? if ($this->hotel['author_picture'] != '') { ?>
                     <div id='product-detail-author'>
                         <div id='product-detail-author-box'>
                         <img src="<?= HOTEL_GALLERY . $this->hotel['author_picture'] ?>">
@@ -52,10 +52,14 @@
                 <? } ?>
             </div>
             <div class="product-detail-content"  id="map">
+                <? if ($this->type != 'gift') { ?>
                 <img src="<?= HOTEL_IMAGE . $this->hotel['map_image'] ?>">
+                <? }if ($this->type == 'gift') { ?>
+                <img src="<?= UPLOAD .$this->hotel['map_image'] ?>">
+                <?}?>
             </div>
             <div class="product-detail-content"  id="policies">
-<?= $this->hotel['policies'] ?>
+            <?= $this->hotel['policies'] ?>
             </div>
         </div>
 
@@ -81,6 +85,8 @@
                             </ul>
                         </li>
     <? foreach ($this->rooms as $room) { ?><li>
+       
+                                <input type="hidden" value="" id='days' name="days"> 
                                 <input type="hidden" value="<?= $room['room_id'] ?>" name="room_id[]"> 
                                 <input type="hidden" value="<?= $room['hotel_id'] ?>" name="hotel_id[<?= $room['room_id'] ?>]"> 
                                 <input type="hidden" value="<?= $room['room_type'] ?>" name="room_type[<?= $room['id'] ?>]"> 
@@ -133,10 +139,11 @@
 <? } else { ?>
     <? foreach ($this->rooms as $room) { ?>
                         <input type="hidden" value="<?= $room['room_id'] ?>" name="room_id[]"> 
+                        <input type="hidden" id='days' value="<?= $this->hotel['days'] ?>" name="days"> 
                         <input type="hidden" value="<?= $room['hotel_id'] ?>" name="hotel_id[<?= $room['room_id'] ?>]"> 
                         <input type="hidden" value="<?= $room['room_type'] ?>" name="room_type[<?= $room['room_id'] ?>]"> 
-                        <input type="hidden" value="<?= $this->hotel['places'] ?>" name="adults[<?= $room['room_id'] ?>]"> 
-                        <input type="hidden" value="0" name="children[<?= $room['room_id'] ?>]"> 
+                        <input type="hidden" value="<?= $this->hotel['places'] ?>" id='adults' name="adults[<?= $room['room_id'] ?>]"> 
+                        <input type="hidden" value="0" id='children' name="children[<?= $room['room_id'] ?>]"> 
     <? } ?>
                     <input type="hidden" value="<?= $this->hotel['id'] ?>" name="gift"> 
                     <div class="col-reservation">

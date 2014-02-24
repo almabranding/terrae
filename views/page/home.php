@@ -55,7 +55,7 @@
         <? foreach ($this->suggestions as $key => $group) { ?><div id="home-suggestions-content" class="rsContent slide<?= $key ?>">
                 <ul class="home-suggestions-box rsContent slide<?= $key ?>"><li id='home-suggestions-title'>
                         <div class='label'><?= $group['info']['content'] ?></div>
-                    </li><? foreach ($group['suggestion'] as $suggestion) { ?><li>
+                    </li><? foreach ($group['suggestion'] as $key2=>$suggestion) { if($key2<3){ ?><li>
                             <div class='cover'>
                                 <div class='label'>
                                     <?= $suggestion['content'] ?>
@@ -63,7 +63,7 @@
                                 </div>
                             </div>
                             <img src="<?= UPLOAD . Model::getRouteImg($suggestion['imgdate']) . $suggestion['file_name'] ?>">
-                        </li><? } ?>
+                    </li><? }} ?>
                 </ul></div><? } ?>
     </div>
 

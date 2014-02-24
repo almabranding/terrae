@@ -254,12 +254,12 @@ class Booking_bridge extends Model {
     }
 
     public function getSuggestions($lang = 'en') {
-        $sugestions = $this->db->select('SELECT *,p.created_at as imgdate,s.id as sugid,p.*  FROM suggestions s JOIN suggestions_description sd ON sd.suggestion_id=s.id JOIN photos p ON s.photo_id=p.id  WHERE sd.language_id=:lang  ORDER BY `group`,`position`;', array('lang' => $lang));
-        foreach ($sugestions as $value) {
+        $sugestions = $this->db->select('SELECT *,p.created_at as imgdate,s.id as sugid,p.*  FROM suggestions s JOIN suggestions_description sd ON sd.suggestion_id=s.id JOIN photos p ON s.photo_id=p.id JOIN suggestions_groups sg ON sg.id=s.`group` WHERE sd.language_id=:lang AND s.visibility="public" AND sg.visibility="public" ORDER BY s.`group`,s.`position`', array('lang' => $lang));
 
+        foreach ($sugestions as $value) {
             $return[$value['group']]['suggestion'][] = $value;
         }
-        $group = $this->db->select('SELECT * FROM suggestions_groups s JOIN suggestions_groups_description sd ON sd.suggestions_group_id=s.id WHERE sd.language_id=:lang ORDER by position', array('lang' => $lang));
+        $group = $this->db->select('SELECT * FROM suggestions_groups s JOIN suggestions_groups_description sd ON sd.suggestions_group_id=s.id WHERE sd.language_id=:lang AND s.visibility="public" ORDER by position', array('lang' => $lang));
         foreach ($group as $value) {
             $return[$value['suggestions_group_id']]['info'] = $value;
         }

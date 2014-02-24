@@ -83,7 +83,6 @@ class User extends Controller {
 
     function login() {
         $this->model->login();
-        header('location: ' . URL . 'experience');
     }
 
     function logout() {

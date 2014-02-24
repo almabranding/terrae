@@ -90,7 +90,8 @@ class User_Model extends Model {
         $rule['required'] = array('error', 'Password is required!');
         $rule['length'] = array(6, 10, 'error', 'The password must have between 6 and 10 characters');
         $form->add('label', 'label_password', 'password', 'Choose a password:');
-        $obj = $form->add('password', 'password', '', $rule);
+        $obj = $form->add('password', 'password', '');
+        $obj->set_rule($rule);
         $form->add('note', 'note_password', 'password', 'Password must be have between 6 and 10 characters.');
 
         // "confirm password"
@@ -125,7 +126,7 @@ class User_Model extends Model {
     }
 
     public function loginForm() {
-        $action = URL . 'user/login';
+        $action = URL . 'user/login?rute='.RUTE;
         $atributes = array(
             'enctype' => 'multipart/form-data',
         );
@@ -254,7 +255,8 @@ class User_Model extends Model {
             Session::set('loggedIn', true);
             Session::set('username', $data['first_name'] . ' ' . $data['last_name']);
             Session::set('userid', $data['id']);
-            header('location: ' . URL . 'experience');
+            if(isset($_GET['rute']))  header('location: ' . URL .$_GET['rute']);
+            else header('location: ' . URL . 'experience');
         } else {
             header('location: ' . URL . 'experience');
         }

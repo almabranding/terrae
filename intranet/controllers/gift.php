@@ -18,6 +18,7 @@ class Gift extends Controller {
     }
     public function viewType($id=null) 
     {
+        $this->view->type=true;
         $this->view->form=$this->model->typeForm($id);
         $this->view->render('gift/edit'); 
     }
@@ -84,5 +85,45 @@ class Gift extends Controller {
     {
         $id=$this->model->delImage($id);
         header('location: '.URL.'gift/gallery/'.$group);  
+    }
+    
+    
+    public function bookingList() 
+    {
+        $this->view->section='booking';
+        $this->view->list=$this->model->toTableBooking($this->model->getBookings());
+        $this->view->render('gift/list');  
+    }
+    public function bookingView($id=null) 
+    {
+        $this->view->id=$id;
+        $this->view->form=$this->model->giftBookingForm($id);
+        $data=$this->model->getBookings($id);
+        $this->view->data=array(
+            'Code'=>$data['code'],
+            'Status'=>$this->model->getBookingStatus($data['status']),
+            'Additional info'=>$data['additional_info'],
+            'Status Changed'=>$data['status_changed'],
+            'CREDIT CARD INFO'=>'',
+            'CC Type'=>$data['cc_type'],
+            'CC Name'=>$data['cc_holder_name'],
+            'CC Number'=>$data['cc_number'],
+            'CC Expires date'=>$data['cc_expires_month'].'-'.$data['cc_expires_year'],
+            'CC CVV'=>$data['cc_cvv_code'],
+            'BOOKER INFO'=>$data[''],
+            'Booker ID'=>$data['customer_id'],
+            'Booker Name'=>$data['cname'].' '.$data['clname'],
+            'Booker mail'=>$data['cmail'],
+            'Booker ID'=>$data['customer_id'],
+            'RECEPTOR INFO'=>$data[''],
+            'Receptor name'=>$data['rec_first_name'].' '.$data['rec_last_name'],
+            'Receptor mail'=>$data['rec_email'],
+            'Receptor message'=>$data['rec_message'],
+        );
+        $this->view->render('gift/viewBooking'); 
+    }
+    public function editBooking($id){
+        $this->model->editBooking($id);
+        header('location: '.URL.'gift/bookingList'); 
     }
 }

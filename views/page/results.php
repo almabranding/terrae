@@ -15,7 +15,7 @@
     <?= $hotel[$cont]['description'] ?>
                             <a href="/experience/detail/<?= $hotel[$cont]['hotel_id'] ?>/<?= $hotel[$cont]['name'] ?>" class="more"><?=$this->lang['more']?></a>
                         </div>
-                        <h2>Availability and booking</h2>
+                        <h2><?=$this->lan['Availability and booking'];?></h2>
                     </div>
                     <ul id="results-list-options">
                         <li>
@@ -37,6 +37,7 @@
                         <form id="booking"  method="post" action="/booking/confirmation">
                         <? foreach ($hotel as $keyR => $room) {  ?><li>
                                     <ul class="results-list-cols">
+                                        <input type="hidden" id='days' value="" name="days"> 
                                         <input type="hidden" value="<?= $room['room_id'] ?>" name="room_id[]"> 
                                         <input type="hidden" value="<?= $room['hotel_id'] ?>" name="hotel_id[<?= $room['room_id'] ?>]"> 
                                         <input type="hidden" value="<?= $room['room_type'] ?>" name="room_type[<?= $room['room_id'] ?>]"> 

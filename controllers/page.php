@@ -10,13 +10,14 @@ class Page extends Controller {
     
     
     function view($page) {
+        if(isset($_POST['contact'])){
+            $MailHelper=new MailHelper();
+            $MailHelper->sendContact();
+        }
        $this->view->setBreadcrumb(ucfirst($page),true);
        $this->view->contactForm=$this->model->contactForm();
        $this->view->article=$this->model->getArticle($page);
        $this->view->render('page/article');
-    }
-    function sendcontact() {
-       var_dump($_POST);
     }
     
 }

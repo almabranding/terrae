@@ -259,10 +259,10 @@ class Slots extends MicroGrid {
                 //'priority_order' => array('title'=>_ORDER, 'type'=>'textbox',  'width'=>'35px', 'required'=>true, 'readonly'=>false, 'maxlength'=>'3', 'default'=>'0', 'validation_type'=>'numeric|positive'),
                 'is_active' => array('title' => _ACTIVE, 'type' => 'checkbox', 'readonly' => false, 'default' => '1', 'true_value' => '1', 'false_value' => '0'),
             ),
-            'separator_2' => array(
+            /*'separator_2' => array(
                 'separator_info' => array('legend' => _ROOM_FACILITIES),
                 'facilities' => array('title' => _FACILITIES, 'type' => 'enum', 'width' => '', 'required' => false, 'readonly' => false, 'default' => '', 'source' => $arr_facilities, 'default_option' => '', 'unique' => false, 'javascript_event' => '', 'view_type' => 'checkboxes', 'multi_select' => true),
-            ),
+            ),*/
             'separator_3' => array(
                 'separator_info' => array('legend' => _IMAGES, 'columns' => '2'),
                 'room_icon' => array('title' => _ICON_IMAGE, 'type' => 'image', 'width' => '210px', 'required' => false, 'target' => 'images/rooms_icons/', 'no_image' => '', 'random_name' => $random_name, 'image_name_pefix' => $image_prefix . 'icon_', 'unique' => true, 'thumbnail_create' => true, 'thumbnail_field' => 'room_icon_thumb', 'thumbnail_width' => '190px', 'thumbnail_height' => '', 'file_maxsize' => '500k'),
@@ -335,11 +335,11 @@ class Slots extends MicroGrid {
                 'additional_guest_fee' => array('title' => _ADDITIONAL_GUEST_FEE, 'type' => 'hidden', 'width' => '60px', 'required' => true, 'readonly' => false, 'maxlength' => '10', 'default' => '0', 'validation_type' => 'float|positive', 'pre_html' => $default_currency . ' '),
                 //'priority_order' => array('title'=>_ORDER, 'type'=>'textbox',  'width'=>'35px', 'required'=>true, 'readonly'=>false, 'maxlength'=>'3', 'default'=>'0', 'validation_type'=>'numeric|positive'),
                 'is_active' => array('title' => _ACTIVE, 'type' => 'checkbox', 'readonly' => false, 'default' => '1', 'true_value' => '1', 'false_value' => '0'),
-            ),
+            ),/*
             'separator_2' => array(
                 'separator_info' => array('legend' => 'Experience Facilities'),
                 'facilities' => array('title' => _FACILITIES, 'type' => 'enum', 'width' => '', 'required' => false, 'readonly' => false, 'default' => '', 'source' => $arr_facilities, 'default_option' => '', 'unique' => false, 'javascript_event' => '', 'view_type' => 'checkboxes', 'multi_select' => true),
-            ),
+            ),*/
             'separator_3' => array(
                 'separator_info' => array('legend' => _IMAGES, 'columns' => '2'),
                 'room_icon' => array('title' => _ICON_IMAGE, 'type' => 'image', 'width' => '210px', 'required' => false, 'target' => 'images/rooms_icons/', 'no_image' => '', 'random_name' => $random_name, 'image_name_pefix' => $image_prefix . 'icon_', 'thumbnail_create' => true, 'thumbnail_field' => 'room_icon_thumb', 'thumbnail_width' => '190px', 'thumbnail_height' => '', 'file_maxsize' => '500k'),
@@ -373,10 +373,10 @@ class Slots extends MicroGrid {
                 'priority_order' => array('title' => _ORDER, 'type' => 'label'),
                 'is_active' => array('title' => _ACTIVE, 'type' => 'enum', 'source' => $arr_is_active),
             ),
-            'separator_2' => array(
+            /*'separator_2' => array(
                 'separator_info' => array('legend' => _ROOM_FACILITIES),
                 'facilities' => array('title' => _FACILITIES, 'type' => 'enum', 'width' => '', 'required' => false, 'readonly' => false, 'default' => '', 'source' => $arr_facilities, 'default_option' => '', 'unique' => false, 'javascript_event' => '', 'view_type' => 'checkboxes', 'multi_select' => true),
-            ),
+            ),*/
             'separator_3' => array(
                 'separator_info' => array('legend' => _IMAGES, 'columns' => '2'),
                 'room_icon' => array('title' => _ICON_IMAGE, 'type' => 'image', 'target' => 'images/rooms_icons/', 'no_image' => 'no_image.png'),
